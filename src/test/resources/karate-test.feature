@@ -1,25 +1,36 @@
 Feature: Escenarios para la API de personajes de Marvel
 
   Background:
-    * url 'http://localhost:8080/otapiahi5/api/characters'
+    * url 'http://localhost:8080/otapiahi11/api/characters'
     * configure headers = { 'Content-Type': 'application/json' }
+    * def characterSchema =
+  """
+  {
+    id: '#number',
+    name: '#string',
+    alterego: '#string',
+    description: '#string',
+    powers: '#[]'
+  }
+  """
 
   Scenario: Obtener todos los personajes
     When method get
     Then status 200
+    And match response == [] || response == '#[] characterSchema'
 
   Scenario: Crear personaje exitosamente
     * def body = { name: 'Iron Man', alterego: 'Tony Stark', description: 'Genius billionaire', powers: ['Armor', 'Flight'] }
     Given request body
     When method post
     Then status 201
-    And match response.name == 'Iron Man'
+    And match response == characterSchema
 
   Scenario: Obtener personaje por ID (exitoso)
     Given path '1'
     When method get
     Then status 200
-    And match response.name == 'Iron Man'
+    And match response == characterSchema
 
   Scenario: Obtener personaje por ID (no existe)
     Given path '999'
@@ -51,6 +62,7 @@ Feature: Escenarios para la API de personajes de Marvel
     When method put
     Then status 200
     And match response.description == 'Updated description'
+    And match response == characterSchema
 
   Scenario: Actualizar personaje (no existe)
     * def body = { name: 'Iron Man', alterego: 'Tony Stark', description: 'Updated description', powers: ['Armor', 'Flight'] }
