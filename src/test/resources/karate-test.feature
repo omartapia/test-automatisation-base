@@ -1,7 +1,7 @@
 Feature: Escenarios para la API de personajes de Marvel
 
   Background:
-    * url 'http://localhost:8080/otapiahi11/api/characters'
+    * url 'http://localhost:8080/otapiahi/api/characters'
     * configure headers = { 'Content-Type': 'application/json' }
     * def characterSchema =
   """
